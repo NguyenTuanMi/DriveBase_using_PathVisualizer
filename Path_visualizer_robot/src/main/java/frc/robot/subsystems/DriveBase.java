@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d; // represent rotation on the field, involve with the unit circle
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
@@ -25,14 +25,14 @@ public class DriveBase extends SubsystemBase {
   public WPI_TalonSRX leftMaster = new WPI_TalonSRX(rightmaster);
   public WPI_TalonSRX leftFollow = new WPI_TalonSRX(rightmaster);
 
-  DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(track_width);
-  DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading());
+  DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(track_width); // Create kinematic
+  DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading()); // Create odometry 
 
-  SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.268, 1.89, 0.243);
+  SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.268, 1.89, 0.243); // send the feedforward
 
   AHRS gyro = new AHRS(SPI.Port.kMXP);
 
-  Pose2d pose = new Pose2d();
+  Pose2d pose = new Pose2d(); // position of robot
 
   PIDController leftController = new PIDController(9.95, 0, 0);
   PIDController righController = new PIDController(9.95, 0, 0);
@@ -60,7 +60,10 @@ public class DriveBase extends SubsystemBase {
   }
 
   public Rotation2d getHeading () {
-    return Rotation2d.fromDegrees(-gyro.getAngle());
+    return Rotation2d.fromDegrees(-gyro.getAngle()); 
+    // when robot rotates clockwise, 
+    //robot will return positive angle while in mathematics, 
+    //the unit circle will return more negative angle, so we have to place - before the angle
   }
 
   public SimpleMotorFeedforward getFeedforward () {
@@ -94,15 +97,15 @@ public class DriveBase extends SubsystemBase {
     );
   }
 
-  public void setOutput(double leftVolts, double rightVolts) {
-    leftMaster.set(leftVolts / 12);
+  public void setOutput(double leftVolts, double rightVolts) { // leftVolts and rightVolts are the input-voltage
+    leftMaster.set(leftVolts / 12); // /12 to convert from volt to speed
     rightMaster.set(rightVolts / 12);
   }
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    pose = odometry.update(
+    pose = odometry.update( // update the odometry
     getHeading(),
     leftMaster.getSelectedSensorVelocity() / left_motor_gear_ratio * 2 * Math.PI * wheel_radius / 60, 
     rightMaster.getSelectedSensorPosition() / right_motor_gear_ratio * 2 * Math.PI * wheel_radius / 60

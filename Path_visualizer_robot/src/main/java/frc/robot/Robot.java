@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  String json_trajectory =  "directory to trajectory";
+  String json_trajectory =  "directory to trajectory.json";
   public static Trajectory trajectory = new Trajectory();
 
   /**

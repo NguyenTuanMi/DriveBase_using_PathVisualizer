@@ -24,6 +24,5 @@ public final class Constants {
         public static final double left_motor_gear_ratio = 72.9;
         public static final double right_motor_gear_ratio = 100;
         public static final double wheel_radius = 3; // in meters
-
     }
 }
